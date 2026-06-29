@@ -4,6 +4,16 @@ const flash = require('express-flash');
 const path = require('path');
 const db = require('./db/database');
 
+// Run migrations on startup (important for Railway deployment)
+// This ensures database is initialized when container starts
+try {
+  require('./db/migrate');
+  console.log('✓ Database migrations completed');
+} catch (error) {
+  console.error('✗ Database migration failed:', error.message);
+  // Don't exit - let the app start anyway (migrations might already be applied)
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
