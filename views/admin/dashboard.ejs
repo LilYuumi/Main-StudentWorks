@@ -1,0 +1,396 @@
+<%- include('../partials/header') %>
+
+<nav class="bg-idb-blue border-b border-idb-blue-dark sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap justify-between items-center gap-2 py-2 min-h-[3.5rem]">
+      <button class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="/admin/dashboard" class="flex items-center gap-2">
+        <div class="bg-white rounded-lg px-2 py-1 shadow-sm"><img src="/images/logo.png" alt="StudentWorks" class="h-9 w-auto"></div>
+                <span class="status-chip ml-1" style="font-size:0.6rem;padding:2px 8px;background:#E53E3E;color:white">Admin</span>
+      </a>
+      <div class="hidden md:flex md:flex-wrap md:items-center md:gap-4">
+        <span class="text-sm text-white/70 hidden md:block"><%= user.name %></span>
+        <a href="/logout" class="text-sm text-white/80 hover:text-white font-medium">Keluar</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 page-fade-in">
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
+    <h2 class="font-heading text-xl sm:text-2xl font-bold text-idb-blue-dark">Dashboard Admin</h2>
+    <div class="sz-indicator <%= isExamPeriod ? 'sz-indicator--active' : 'sz-indicator--inactive' %>" style="align-self:flex-start">
+      <span class="w-2.5 h-2.5 rounded-full <%= isExamPeriod ? 'bg-yellow-700' : 'bg-white' %>"></span>
+      <span class="text-xs sm:text-sm">Safe Zone (Ujian): <%= isExamPeriod ? 'AKTIF' : 'NONAKTIF' %></span>
+    </div>
+  </div>
+
+  <!-- Stats Row - Professional Design -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <!-- Total Pengguna -->
+    <div class="card p-4 hover:shadow-lg transition-all duration-300 border-l-4 border-idb-blue">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="users" class="w-5 h-5 text-idb-blue"></i>
+        </div>
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Users</span>
+      </div>
+      <p class="font-heading text-2xl font-bold text-idb-blue mb-1"><%= stats.totalUsers %></p>
+      <p class="text-xs text-gray-600 font-medium"><%= stats.totalStudents %> mahasiswa · <%= stats.totalClients %> klien</p>
+    </div>
+
+    <!-- Proyek Aktif -->
+    <div class="card p-4 hover:shadow-lg transition-all duration-300 border-l-4 border-idb-blue-light">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+          <i data-lucide="briefcase" class="w-5 h-5 text-idb-blue-light"></i>
+        </div>
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Active</span>
+      </div>
+      <p class="font-heading text-2xl font-bold text-idb-blue-light mb-1"><%= stats.activeProjects %></p>
+      <p class="text-xs text-gray-600 font-medium">dari <%= stats.totalProjects %> total</p>
+    </div>
+
+    <!-- Dana Terkunci -->
+    <div class="card p-4 hover:shadow-lg transition-all duration-300 border-l-4 border-idb-orange">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="lock" class="w-5 h-5 text-idb-orange"></i>
+        </div>
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Escrow</span>
+      </div>
+      <p class="font-heading text-xl font-bold text-idb-orange mb-1">Rp <%= stats.escrowLocked.toLocaleString('id-ID') %></p>
+      <p class="text-xs text-gray-600 font-medium">Dana Terkunci</p>
+    </div>
+
+    <!-- Verifikasi Pending -->
+    <div class="card p-4 hover:shadow-lg transition-all duration-300 border-l-4 <%= stats.pendingVerification > 0 ? 'border-red-500' : 'border-idb-green' %>">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-10 h-10 <%= stats.pendingVerification > 0 ? 'bg-red-100' : 'bg-green-100' %> rounded-lg flex items-center justify-center">
+          <i data-lucide="<%= stats.pendingVerification > 0 ? 'alert-circle' : 'check-circle-2' %>" class="w-5 h-5 <%= stats.pendingVerification > 0 ? 'text-red-500' : 'text-idb-green' %>"></i>
+        </div>
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Pending</span>
+      </div>
+      <p class="font-heading text-2xl font-bold <%= stats.pendingVerification > 0 ? 'text-red-500' : 'text-idb-green' %> mb-1"><%= stats.pendingVerification %></p>
+      <p class="text-xs text-gray-600 font-medium">Verifikasi Pending</p>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+
+    <!-- Escrow Verification Center -->
+    <div>
+      <h3 class="font-heading text-lg font-bold text-idb-blue-dark mb-4">Pusat Verifikasi Pembayaran (Escrow)</h3>
+
+      <% if (pendingEscrow.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-state-icon" style="background:#EDF2F7">
+            <i data-lucide="shield-check" class="w-7 h-7"></i>
+          </div>
+          <p class="text-gray-500 text-sm">Tidak ada pembayaran yang menunggu verifikasi.</p>
+        </div>
+      <% } else { %>
+        <div class="space-y-4 mb-6">
+          <% pendingEscrow.forEach(escrow => { %>
+            <div class="card p-5">
+              <div class="mb-3">
+                <h4 class="font-heading font-semibold text-idb-blue-dark"><%= escrow.judul_proyek %></h4>
+                <p class="text-sm text-gray-500">Klien: <%= escrow.klien_name %> · Talenta: <%= escrow.mahasiswa_name || '-' %></p>
+                <p class="text-sm text-gray-500 mt-1">Jumlah: <strong class="text-idb-charcoal">Rp <%= escrow.jumlah_dana.toLocaleString('id-ID') %></strong></p>
+              </div>
+
+              <% if (escrow.bukti_transfer_path) { %>
+                <div class="mb-4">
+                  <p class="text-xs text-gray-500 font-medium mb-1.5">Bukti Transfer:</p>
+                  <img src="<%= escrow.bukti_transfer_path %>" alt="Bukti Transfer" class="w-full h-36 object-cover rounded-card border border-gray-200">
+                </div>
+              <% } %>
+
+              <div class="flex gap-2">
+                <form method="POST" action="/admin/escrow/setujui/<%= escrow.id %>" class="flex-1">
+                  <button type="submit" onclick="return confirm('Setujui pembayaran ini?')" class="btn btn-green w-full">Setujui</button>
+                </form>
+                <form method="POST" action="/admin/escrow/tolak/<%= escrow.id %>" class="flex-1">
+                  <button type="submit" onclick="return confirm('Tolak bukti transfer ini?')" class="btn btn-red w-full">Tolak</button>
+                </form>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+
+      <!-- Escrow History Table -->
+      <h4 class="font-heading text-sm font-semibold text-gray-600 mb-3">Riwayat Semua Escrow</h4>
+      <div class="card-flat overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-idb-gray">
+            <tr>
+              <th class="text-left px-4 py-3 text-gray-600 font-medium text-xs">Proyek</th>
+              <th class="text-left px-4 py-3 text-gray-600 font-medium text-xs">Status</th>
+              <th class="text-right px-4 py-3 text-gray-600 font-medium text-xs">Jumlah</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% allEscrow.forEach(e => { %>
+              <tr class="hover-row border-t border-gray-50">
+                <td class="px-4 py-3 font-medium"><%= e.judul_proyek %></td>
+                <td class="px-4 py-3">
+                  <%
+                    let escrowChip = 'status-chip--gray';
+                    if (e.status === 'Dana Dikunci') escrowChip = 'status-chip--green';
+                    else if (e.status === 'Menunggu Pembayaran') escrowChip = 'status-chip--amber';
+                    else if (e.status === 'Dana Dicairkan') escrowChip = 'status-chip--gray';
+                  %>
+                  <span class="status-chip <%= escrowChip %>" style="font-size:0.6rem"><%= e.status %></span>
+                </td>
+                <td class="px-4 py-3 text-right font-medium">Rp <%= e.jumlah_dana.toLocaleString('id-ID') %></td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Safe Zone Control Panel -->
+    <div>
+      <h3 class="font-heading text-lg font-bold text-idb-blue-dark mb-4">Kontrol Kalender Akademik (Safe Zone)</h3>
+
+      <!-- Status indicator -->
+      <% if (isExamPeriod) { %>
+        <div class="safe-zone-banner mb-4 flex items-center gap-3">
+          <div class="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+            <i data-lucide="alert-triangle" class="w-6 h-6 text-amber-600"></i>
+          </div>
+          <div>
+            <strong class="font-heading">Safe Zone (Periode Ujian) sedang AKTIF!</strong>
+            <span class="text-sm block mt-0.5">Mahasiswa akan melihat peringatan saat mengambil proyek, namun tidak diblokir.</span>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="escrow-banner escrow-banner--locked mb-4 flex items-center gap-3">
+          <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+            <i data-lucide="check-circle" class="w-5 h-5 text-idb-green"></i>
+          </div>
+          <span>Safe Zone tidak aktif. Mahasiswa dapat bekerja normal.</span>
+        </div>
+      <% } %>
+
+      <!-- Add new period -->
+      <div class="card p-6 mb-6">
+        <h4 class="font-heading font-semibold text-idb-blue-dark mb-4">Tambah Periode Ujian</h4>
+        <form method="POST" action="/admin/kalender" class="space-y-3">
+          <div>
+            <label class="text-xs font-medium text-gray-600 block mb-1">Nama Periode</label>
+            <input type="text" name="nama_periode" required class="input" placeholder="Contoh: UTS Semester Ganjil 2026/2027">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-xs font-medium text-gray-600 block mb-1">Tanggal Mulai Ujian</label>
+              <input type="date" name="tanggal_mulai" required class="input">
+            </div>
+            <div>
+              <label class="text-xs font-medium text-gray-600 block mb-1">Tanggal Selesai Ujian</label>
+              <input type="date" name="tanggal_selesai" required class="input">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-blue w-full">Tambah Periode</button>
+        </form>
+      </div>
+
+      <!-- Existing periods -->
+      <div class="space-y-3">
+        <% calendar.forEach(period => { %>
+          <div class="card p-4">
+            <div class="flex justify-between items-center mb-2">
+              <div>
+                <h5 class="font-heading font-medium text-idb-blue-dark text-sm"><%= period.nama_periode %></h5>
+                <p class="text-xs text-gray-500 mt-0.5"><%= period.tanggal_mulai %> — <%= period.tanggal_selesai %></p>
+              </div>
+              <span class="status-chip <%= period.is_active ? 'status-chip--green' : 'status-chip--gray' %>" style="font-size:0.6rem">
+                <%= period.is_active ? 'Aktif' : 'Nonaktif' %>
+              </span>
+            </div>
+            <div class="flex gap-2 mt-3">
+              <form method="POST" action="/admin/kalender/toggle/<%= period.id %>" class="flex-1">
+                <button type="submit" class="btn btn-ghost w-full" style="font-size:0.75rem;padding:6px 12px">
+                  <%= period.is_active ? 'Nonaktifkan' : 'Aktifkan' %>
+                </button>
+              </form>
+              <form method="POST" action="/admin/kalender/hapus/<%= period.id %>" class="flex-1">
+                <button type="submit" onclick="return confirm('Hapus periode ini?')" class="btn w-full" style="font-size:0.75rem;padding:6px 12px;border:1px solid #FEB2B2;color:#E53E3E">
+                  Hapus
+                </button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+
+        <% if (calendar.length === 0) { %>
+          <div class="card-flat p-6 text-center">
+            <p class="text-gray-500 text-sm">Belum ada periode kalender akademik.</p>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- User Management Section -->
+  <div class="mt-8">
+    <h3 class="font-heading text-lg font-bold text-idb-blue-dark mb-4">Manajemen Pengguna</h3>
+
+    <!-- Filter Tabs -->
+    <div class="flex gap-2 mb-4 flex-wrap overflow-x-auto pb-1">
+      <button onclick="filterUsers('all')" class="user-filter-btn status-chip status-chip--blue" style="cursor:pointer">Semua (<%= allUsers.length %>)</button>
+      <button onclick="filterUsers('mahasiswa')" class="user-filter-btn status-chip status-chip--gray" style="cursor:pointer">Mahasiswa (<%= allUsers.filter(u => u.role === 'mahasiswa').length %>)</button>
+      <button onclick="filterUsers('klien')" class="user-filter-btn status-chip status-chip--gray" style="cursor:pointer">Klien (<%= allUsers.filter(u => u.role === 'klien').length %>)</button>
+      <button onclick="filterUsers('admin')" class="user-filter-btn status-chip status-chip--gray" style="cursor:pointer">Admin (<%= allUsers.filter(u => u.role === 'admin').length %>)</button>
+    </div>
+
+    <!-- User Table -->
+    <div class="card overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full text-sm" id="users-table">
+          <thead class="bg-idb-gray">
+            <tr>
+              <th class="text-left px-4 py-3 text-gray-600 font-medium text-xs">Pengguna</th>
+              <th class="text-left px-4 py-3 text-gray-600 font-medium text-xs">Email</th>
+              <th class="text-left px-4 py-3 text-gray-600 font-medium text-xs">Role</th>
+              <th class="text-left px-4 py-3 text-gray-600 font-medium text-xs">Detail Profil</th>
+              <th class="text-left px-4 py-3 text-gray-600 font-medium text-xs">Skill / Info</th>
+              <th class="text-center px-4 py-3 text-gray-600 font-medium text-xs">Proyek</th>
+              <th class="text-left px-4 py-3 text-gray-600 font-medium text-xs">Terdaftar</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% allUsers.forEach(u => { %>
+              <tr class="user-row hover-row border-t border-gray-50" data-role="<%= u.role %>">
+                <!-- Name + Avatar -->
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center text-white font-heading font-bold text-xs
+                      <%= u.role === 'mahasiswa' ? 'bg-idb-blue' : u.role === 'klien' ? 'bg-idb-orange' : 'bg-idb-charcoal' %>">
+                      <%= u.name.charAt(0).toUpperCase() %>
+                    </div>
+                    <div>
+                      <p class="font-medium text-idb-blue-dark"><%= u.name %></p>
+                      <% if (u.role === 'mahasiswa' && u.nim) { %>
+                        <p class="text-xs text-gray-400">NIM: <%= u.nim %></p>
+                      <% } %>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Email -->
+                <td class="px-4 py-3 text-gray-600"><%= u.email %></td>
+
+                <!-- Role Badge -->
+                <td class="px-4 py-3">
+                  <%
+                    let roleChip = 'status-chip--gray';
+                    let roleLabel = u.role;
+                    if (u.role === 'mahasiswa') { roleChip = 'status-chip--blue'; roleLabel = 'Mahasiswa'; }
+                    else if (u.role === 'klien') { roleChip = 'status-chip--amber'; roleLabel = 'Klien'; }
+                    else if (u.role === 'admin') { roleChip = 'status-chip--green'; roleLabel = 'Admin'; }
+                  %>
+                  <span class="status-chip <%= roleChip %>" style="font-size:0.6rem"><%= roleLabel %></span>
+                </td>
+
+                <!-- Profile Details -->
+                <td class="px-4 py-3">
+                  <% if (u.role === 'mahasiswa') { %>
+                    <div class="space-y-0.5">
+                      <% if (u.jurusan) { %>
+                        <p class="text-xs text-gray-600"><%= u.jurusan %></p>
+                      <% } %>
+                      <% if (u.bio) { %>
+                        <p class="text-xs text-gray-400 max-w-[150px] truncate"><%= u.bio %></p>
+                      <% } %>
+                      <% if (u.is_safe_zone) { %>
+                        <span class="inline-flex items-center gap-1 text-xs text-yellow-700 font-medium">
+                          <span class="w-1.5 h-1.5 bg-yellow-500 rounded-full"></span> Safe Zone
+                        </span>
+                      <% } %>
+                      <% if (u.verified_count > 0) { %>
+                        <p class="text-xs text-idb-blue font-medium"><%= u.verified_count %> kompetensi terverifikasi</p>
+                      <% } %>
+                    </div>
+                  <% } else if (u.role === 'klien') { %>
+                    <p class="text-xs text-gray-500"><%= u.project_count %> proyek diposting</p>
+                  <% } else { %>
+                    <p class="text-xs text-gray-400">Administrator</p>
+                  <% } %>
+                </td>
+
+                <!-- Skills / Info -->
+                <td class="px-4 py-3">
+                  <% if (u.role === 'mahasiswa' && u.skills_parsed && u.skills_parsed.length > 0) { %>
+                    <div class="flex flex-wrap gap-1">
+                      <% u.skills_parsed.slice(0, 3).forEach(skill => { %>
+                        <span class="text-xs px-2 py-0.5 bg-idb-gray text-idb-charcoal rounded-btn border border-gray-200 font-medium"><%= skill %></span>
+                      <% }) %>
+                      <% if (u.skills_parsed.length > 3) { %>
+                        <span class="text-xs text-gray-400">+<%= u.skills_parsed.length - 3 %></span>
+                      <% } %>
+                    </div>
+                  <% } else if (u.role === 'klien') { %>
+                    <p class="text-xs text-gray-400">—</p>
+                  <% } else if (u.role === 'admin') { %>
+                    <p class="text-xs text-gray-400">—</p>
+                  <% } else { %>
+                    <p class="text-xs text-gray-400">Belum lengkap</p>
+                  <% } %>
+                </td>
+
+                <!-- Projects Count -->
+                <td class="px-4 py-3 text-center">
+                  <% if (u.project_count !== undefined) { %>
+                    <span class="font-heading font-bold text-idb-blue"><%= u.project_count %></span>
+                  <% } else { %>
+                    <span class="text-gray-400">—</span>
+                  <% } %>
+                </td>
+
+                <!-- Registered Date -->
+                <td class="px-4 py-3 text-xs text-gray-500">
+                  <%= new Date(u.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- User Filter Script -->
+<script>
+function filterUsers(role) {
+  const rows = document.querySelectorAll('.user-row');
+  rows.forEach(row => {
+    if (role === 'all' || row.dataset.role === role) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+
+  // Update active tab styling
+  document.querySelectorAll('.user-filter-btn').forEach(btn => {
+    btn.classList.remove('status-chip--blue', 'status-chip--green', 'status-chip--amber');
+    btn.classList.add('status-chip--gray');
+  });
+  event.target.classList.remove('status-chip--gray');
+  if (role === 'mahasiswa') event.target.classList.add('status-chip--blue');
+  else if (role === 'klien') event.target.classList.add('status-chip--amber');
+  else if (role === 'admin') event.target.classList.add('status-chip--green');
+  else event.target.classList.add('status-chip--blue');
+}
+
+// Initialize Lucide icons
+if (typeof lucide !== 'undefined') {
+  lucide.createIcons();
+}
+</script>
+
+<%- include('../partials/footer') %>

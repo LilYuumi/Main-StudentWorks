@@ -1,0 +1,678 @@
+<%- include('partials/header') %>
+
+<!-- ═══════════════════════════════════════════════
+     NAVBAR — Transparent → Solid on Scroll
+     ═══════════════════════════════════════════════ -->
+<nav id="landing-nav" class="landing-navbar fixed top-0 left-0 right-0 z-50 border-b border-transparent">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap justify-between items-center gap-2 py-3 min-h-[4.5rem]">
+      <button class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="/" class="flex items-center gap-2.5 nav-brand">
+        <div class="bg-white rounded-lg px-2 py-1 shadow-sm"><img src="/images/logo.png" alt="StudentWorks" class="h-10 w-auto"></div>
+      </a>
+      <div class="hidden md:flex md:flex-wrap md:items-center md:gap-8">
+        <a href="#fitur" class="nav-link text-sm font-medium text-white/80 hover:text-white transition-colors">Fitur</a>
+        <a href="#talenta" class="nav-link text-sm font-medium text-white/80 hover:text-white transition-colors">Talenta</a>
+        <a href="#cara-kerja" class="nav-link text-sm font-medium text-white/80 hover:text-white transition-colors">Cara Kerja</a>
+        <% if (user) { %>
+          <span class="text-sm text-white/80 font-medium">Halo, <%= user.name.split(' ')[0] %></span>
+          <a href="/logout" class="text-sm text-white/80 hover:text-white font-medium">Keluar</a>
+        <% } else { %>
+          <a href="/login" class="text-sm font-medium text-white/80 hover:text-white transition-colors">Masuk</a>
+          <a href="/register" class="btn btn-orange text-sm" style="padding:9px 20px">Daftar Gratis</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════════ -->
+<section class="relative min-h-screen flex items-center overflow-hidden bg-white">
+  <!-- Subtle background pattern -->
+  <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(15,76,129,0.03) 1px, transparent 0); background-size: 40px 40px;"></div>
+  <div class="absolute top-20 right-0 w-96 h-96 bg-idb-blue/5 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-20 left-0 w-72 h-72 bg-idb-orange/5 rounded-full blur-3xl"></div>
+
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 sm:pt-28 pb-16 sm:pb-20 lg:pt-32 lg:pb-24">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+      <!-- Left: Content -->
+      <div id="hero-content">
+        <div id="hero-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-idb-blue/5 border border-idb-blue/10 mb-8">
+          <i data-lucide="sparkles" class="w-4 h-4 text-idb-orange"></i>
+          <span class="text-xs font-semibold text-idb-blue tracking-wide uppercase">Platform Freelance Mahasiswa IDB Bali</span>
+        </div>
+
+        <h1 id="hero-title" class="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-idb-blue-dark leading-[1.1] mb-6">
+          Kuliah. Kerja.<br>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-idb-orange to-idb-orange-light">Berkembang.</span>
+        </h1>
+
+        <p id="hero-sub" class="text-base sm:text-lg text-gray-500 leading-relaxed mb-8 sm:mb-10 max-w-lg">
+          Hubungkan keahlian akademikmu dengan peluang freelance nyata dari UMKM dan startup Bali. Terverifikasi, terlindungi, terpercaya.
+        </p>
+
+        <div id="hero-ctas" class="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8 sm:mb-12">
+          <a href="/register" class="btn btn-orange text-base" style="padding:14px 32px">
+            <i data-lucide="rocket" class="w-5 h-5"></i>
+            Cari Talenta Mahasiswa
+          </a>
+          <a href="/register" class="btn btn-ghost text-base" style="padding:14px 28px">
+            Gabung Sebagai Freelancer
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Trust indicators -->
+        <div id="hero-trust" class="flex flex-wrap gap-4 sm:gap-6 text-xs sm:text-sm text-gray-400">
+          <div class="flex items-center gap-2">
+            <i data-lucide="shield-check" class="w-4 h-4 text-idb-green"></i>
+            <span>Escrow Aman</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="graduation-cap" class="w-4 h-4 text-idb-blue"></i>
+            <span>Nilai Terverifikasi</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <i data-lucide="calendar-check" class="w-4 h-4 text-idb-orange"></i>
+            <span>Safe Zone Kuliah</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Hero Image with Floating Cards -->
+      <div id="hero-visual" class="relative hidden lg:block">
+        <div class="hero-image-wrapper" style="height: 480px;">
+          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80&fit=crop&auto=format" alt="Mahasiswa berkolaborasi" loading="eager">
+        </div>
+
+        <!-- Floating Card 1: Verified Badge -->
+        <div class="hero-float-card glass-card" style="top: 40px; left: -30px;">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-idb-green/10 rounded-full flex items-center justify-center">
+              <i data-lucide="badge-check" class="w-5 h-5 text-idb-green"></i>
+            </div>
+            <div>
+              <p class="font-heading font-semibold text-xs text-idb-blue-dark">Terverifikasi Kompeten</p>
+              <p class="text-[10px] text-gray-400">Dari data akademik SIAKAD</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Floating Card 2: Project Status -->
+        <div class="hero-float-card glass-card" style="top: 50%; right: -24px;">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-idb-blue/10 rounded-full flex items-center justify-center">
+              <i data-lucide="briefcase" class="w-5 h-5 text-idb-blue"></i>
+            </div>
+            <div>
+              <p class="font-heading font-semibold text-xs text-idb-blue-dark">Desain Logo UMKM</p>
+              <p class="text-[10px] text-gray-400">Rp 2.500.000</p>
+            </div>
+            <span class="status-chip status-chip--blue" style="font-size:0.55rem;padding:3px 8px">Aktif</span>
+          </div>
+        </div>
+
+        <!-- Floating Card 3: Escrow Protected -->
+        <div class="hero-float-card glass-card" style="bottom: 40px; left: -16px;">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-idb-orange/10 rounded-full flex items-center justify-center">
+              <i data-lucide="lock" class="w-5 h-5 text-idb-orange"></i>
+            </div>
+            <div>
+              <p class="font-heading font-semibold text-xs text-idb-blue-dark">Dana Terlindungi</p>
+              <p class="text-[10px] text-gray-400">Escrow otomatis dikunci</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     STATS BAR
+     ═══════════════════════════════════════════════ -->
+<section id="stats-bar" class="py-10 bg-idb-blue-dark relative overflow-hidden">
+  <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0); background-size: 32px 32px;"></div>
+  <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <div class="stat-item">
+        <div class="flex items-center justify-center gap-2 mb-2">
+          <i data-lucide="users" class="w-5 h-5 text-idb-orange"></i>
+          <p class="font-heading text-3xl lg:text-4xl font-bold text-white" data-count="<%= studentCount %>">0</p>
+        </div>
+        <p class="text-sm text-blue-200/70 font-medium">Talenta Mahasiswa</p>
+      </div>
+      <div class="stat-item">
+        <div class="flex items-center justify-center gap-2 mb-2">
+          <i data-lucide="building-2" class="w-5 h-5 text-idb-orange"></i>
+          <p class="font-heading text-3xl lg:text-4xl font-bold text-white" data-count="<%= clientCount %>">0</p>
+        </div>
+        <p class="text-sm text-blue-200/70 font-medium">Klien Terdaftar</p>
+      </div>
+      <div class="stat-item">
+        <div class="flex items-center justify-center gap-2 mb-2">
+          <i data-lucide="folder-open" class="w-5 h-5 text-idb-orange"></i>
+          <p class="font-heading text-3xl lg:text-4xl font-bold text-white" data-count="<%= projectCount %>">0</p>
+        </div>
+        <p class="text-sm text-blue-200/70 font-medium">Proyek Tersedia</p>
+      </div>
+      <div class="stat-item">
+        <div class="flex items-center justify-center gap-2 mb-2">
+          <% if (platformTotalRatings > 0) { %>
+            <i data-lucide="star" class="w-5 h-5 text-yellow-400"></i>
+            <p class="font-heading text-3xl lg:text-4xl font-bold text-white"><%= platformAvgRating %></p>
+          <% } else { %>
+            <i data-lucide="star" class="w-5 h-5 text-blue-200/40"></i>
+            <p class="font-heading text-3xl lg:text-4xl font-bold text-white/40">--</p>
+          <% } %>
+        </div>
+        <p class="text-sm text-blue-200/70 font-medium">
+          <%= platformTotalRatings > 0 ? platformTotalRatings + ' ulasan klien' : 'Belum ada ulasan' %>
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     VALUE PROPOSITION
+     ═══════════════════════════════════════════════ -->
+<section id="fitur" class="py-12 sm:py-16 md:py-24 bg-idb-gray">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="value-header" class="text-center mb-8 sm:mb-12 md:mb-16">
+      <div class="section-divider"></div>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-idb-blue-dark mb-4">Mengapa StudentWorks?</h2>
+      <p class="text-gray-500 max-w-2xl mx-auto text-base leading-relaxed">
+        Platform unik yang mengintegrasikan nilai akademik dengan dunia kerja profesional, memberikan perlindungan dan kepercayaan untuk semua pihak.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <!-- Feature 1: Verified Skills -->
+      <div class="feature-card card p-8 hover:border-idb-blue/20 transition-all group">
+        <div class="feature-icon-box bg-idb-blue/8 mb-6 group-hover:bg-idb-blue/12 transition-colors">
+          <i data-lucide="graduation-cap" class="w-7 h-7 text-idb-blue"></i>
+        </div>
+        <h3 class="font-heading text-lg font-bold text-idb-blue-dark mb-3">Verifikasi Nilai Otomatis</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Keahlian mahasiswa dibuktikan langsung dari data akademik SIAKAD. Klien bisa percaya pada kompetensi yang terverifikasi.
+        </p>
+      </div>
+
+      <!-- Feature 2: Safe Zone -->
+      <div class="feature-card card p-8 hover:border-idb-orange/20 transition-all group">
+        <div class="feature-icon-box bg-idb-orange/8 mb-6 group-hover:bg-idb-orange/12 transition-colors">
+          <i data-lucide="shield-check" class="w-7 h-7 text-idb-orange"></i>
+        </div>
+        <h3 class="font-heading text-lg font-bold text-idb-blue-dark mb-3">Safe Zone Kuliah</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Sistem otomatis melindungi mahasiswa saat minggu ujian. Tidak ada tekanan antara akademik dan pekerjaan freelance.
+        </p>
+      </div>
+
+      <!-- Feature 3: Escrow -->
+      <div class="feature-card card p-8 hover:border-idb-green/20 transition-all group">
+        <div class="feature-icon-box bg-idb-green/8 mb-6 group-hover:bg-idb-green/12 transition-colors">
+          <i data-lucide="lock" class="w-7 h-7 text-idb-green"></i>
+        </div>
+        <h3 class="font-heading text-lg font-bold text-idb-blue-dark mb-3">Rekening Bersama Aman</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+          Dana klien dikunci sistem sebelum pekerjaan dimulai. Mahasiswa bekerja dengan tenang, klien mendapat jaminan keamanan.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FEATURED TALENTS
+     ═══════════════════════════════════════════════ -->
+<section id="talenta" class="py-12 sm:py-16 md:py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="talenta-header" class="text-center mb-8 sm:mb-12 md:mb-16">
+      <div class="section-divider"></div>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-idb-blue-dark mb-4">Talenta Mahasiswa Unggulan</h2>
+      <p class="text-gray-500 max-w-2xl mx-auto text-base leading-relaxed">
+        Mahasiswa IDB Bali yang telah terverifikasi kompetensinya, siap membantu proyek Anda.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <% const talentPhotos = [
+        'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&h=150&fit=crop&crop=face&auto=format',
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face&auto=format',
+        'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&h=150&fit=crop&crop=face&auto=format',
+        'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop&crop=face&auto=format',
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face&auto=format',
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop&crop=face&auto=format'
+      ]; %>
+      <% students.forEach((student, idx) => { %>
+        <% let skills = []; try { skills = JSON.parse(student.skills || '[]'); } catch(e) {} %>
+        <div class="talent-card card p-6 hover:shadow-lg transition-all hover:-translate-y-1">
+          <div class="flex items-center gap-4 mb-4">
+            <img src="<%= talentPhotos[idx % 6] %>" alt="<%= student.name %>" class="talent-photo" loading="lazy">
+            <div>
+              <h4 class="font-heading font-semibold text-idb-blue-dark"><%= student.name %></h4>
+              <p class="text-xs text-gray-400"><%= student.jurusan || 'Belum diisi' %></p>
+            </div>
+          </div>
+
+          <% if (student.bio) { %>
+            <p class="text-sm text-gray-500 mb-4 leading-relaxed line-clamp-2"><%= student.bio %></p>
+          <% } %>
+
+          <div class="flex flex-wrap gap-1.5 mb-4">
+            <% skills.slice(0, 4).forEach(skill => { %>
+              <span class="text-xs px-2.5 py-1 rounded-btn font-medium
+                <%= student.verified_skills && student.verified_skills.includes(skill) ? 'badge-verified' : 'bg-idb-gray text-idb-charcoal border border-gray-200' %>">
+                <%= skill %>
+              </span>
+            <% }) %>
+          </div>
+
+          <% if (student.verified_count > 0) { %>
+            <div class="pt-3 border-t border-gray-100 flex items-center gap-2">
+              <i data-lucide="badge-check" class="w-4 h-4 text-idb-blue"></i>
+              <span class="text-xs font-semibold text-idb-blue"><%= student.verified_count %> kompetensi terverifikasi (Nilai A)</span>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="text-center mt-10">
+      <a href="/klien/proyek" class="btn btn-ghost" style="padding:12px 28px">
+        Lihat Semua Talenta
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     HOW IT WORKS
+     ═══════════════════════════════════════════════ -->
+<section id="cara-kerja" class="py-12 sm:py-16 md:py-24 bg-idb-gray">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="steps-header" class="text-center mb-8 sm:mb-12 md:mb-16">
+      <div class="section-divider"></div>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-idb-blue-dark mb-4">Cara Kerja</h2>
+      <p class="text-gray-500 max-w-2xl mx-auto text-base leading-relaxed">
+        Empat langkah mudah untuk memulai kolaborasi antara mahasiswa dan klien.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-4 gap-8">
+      <!-- Step 1 -->
+      <div class="step-card text-center relative">
+        <div class="step-circle bg-idb-orange text-white mx-auto mb-5 shadow-lg shadow-idb-orange/20">1</div>
+        <div class="mb-3">
+          <i data-lucide="user-plus" class="w-6 h-6 text-idb-blue mx-auto"></i>
+        </div>
+        <h4 class="font-heading font-semibold text-idb-blue-dark mb-2">Daftar & Lengkapi Profil</h4>
+        <p class="text-xs text-gray-500 leading-relaxed">Mahasiswa daftar dan masukkan NIM untuk verifikasi otomatis dari SIAKAD.</p>
+        <!-- Connector line (hidden on mobile) -->
+        <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-gray-200"></div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="step-card text-center relative">
+        <div class="step-circle bg-idb-orange text-white mx-auto mb-5 shadow-lg shadow-idb-orange/20">2</div>
+        <div class="mb-3">
+          <i data-lucide="file-text" class="w-6 h-6 text-idb-blue mx-auto"></i>
+        </div>
+        <h4 class="font-heading font-semibold text-idb-blue-dark mb-2">Klien Posting Proyek</h4>
+        <p class="text-xs text-gray-500 leading-relaxed">UMKM dan startup posting proyek, lalu pilih talenta yang cocok dari daftar mahasiswa.</p>
+        <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-gray-200"></div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="step-card text-center relative">
+        <div class="step-circle bg-idb-orange text-white mx-auto mb-5 shadow-lg shadow-idb-orange/20">3</div>
+        <div class="mb-3">
+          <i data-lucide="lock" class="w-6 h-6 text-idb-blue mx-auto"></i>
+        </div>
+        <h4 class="font-heading font-semibold text-idb-blue-dark mb-2">Escrow & Kerjakan</h4>
+        <p class="text-xs text-gray-500 leading-relaxed">Dana dikunci di rekening bersama, mahasiswa aman mulai bekerja dengan perlindungan penuh.</p>
+        <div class="hidden md:block absolute top-6 left-[60%] w-[80%] border-t-2 border-dashed border-gray-200"></div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="step-card text-center">
+        <div class="step-circle bg-idb-orange text-white mx-auto mb-5 shadow-lg shadow-idb-orange/20">4</div>
+        <div class="mb-3">
+          <i data-lucide="check-circle" class="w-6 h-6 text-idb-blue mx-auto"></i>
+        </div>
+        <h4 class="font-heading font-semibold text-idb-blue-dark mb-2">Review & Cairkan</h4>
+        <p class="text-xs text-gray-500 leading-relaxed">Klien review hasil kerja, setujui, dan dana dicairkan langsung ke mahasiswa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     TESTIMONIAL / SOCIAL PROOF
+     ═══════════════════════════════════════════════ -->
+<section class="py-12 sm:py-16 md:py-24 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div id="testimonial-header" class="text-center mb-8 sm:mb-12 md:mb-16">
+      <div class="section-divider"></div>
+      <h2 class="font-heading text-3xl md:text-4xl font-bold text-idb-blue-dark mb-4">Apa Kata Mereka</h2>
+      <p class="text-gray-500 max-w-2xl mx-auto text-base leading-relaxed">
+        Pengalaman nyata dari mahasiswa dan klien yang telah menggunakan StudentWorks.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8">
+      <div class="testimonial-card card p-8">
+        <div class="flex items-center gap-1 mb-4">
+          <% for (let i = 0; i < 5; i++) { %>
+            <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+          <% } %>
+        </div>
+        <p class="text-sm text-gray-600 leading-relaxed mb-6 italic">
+          "Hasil desainnya sangat bagus dan sesuai ekspektasi! Platform StudentWorks sangat membantu UMKM kami dalam menemukan talenta berkualitas."
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face&auto=format" alt="Budi" class="w-10 h-10 rounded-full object-cover">
+          <div>
+            <p class="font-heading font-semibold text-sm text-idb-blue-dark">Budi Santoso</p>
+            <p class="text-xs text-gray-400">Kopi Bali Premium</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card card p-8">
+        <div class="flex items-center gap-1 mb-4">
+          <% for (let i = 0; i < 4; i++) { %>
+            <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+          <% } %>
+          <i data-lucide="star" class="w-4 h-4 text-gray-200"></i>
+        </div>
+        <p class="text-sm text-gray-600 leading-relaxed mb-6 italic">
+          "Platform yang sangat mudah digunakan! Saya bisa mencari proyek freelance yang sesuai keahlian tanpa mengganggu jadwal kuliah."
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face&auto=format" alt="Ayu" class="w-10 h-10 rounded-full object-cover">
+          <div>
+            <p class="font-heading font-semibold text-sm text-idb-blue-dark">Made Ayu Dewi</p>
+            <p class="text-xs text-gray-400">Mahasiswa Bisnis Digital</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="testimonial-card card p-8">
+        <div class="flex items-center gap-1 mb-4">
+          <% for (let i = 0; i < 5; i++) { %>
+            <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+          <% } %>
+        </div>
+        <p class="text-sm text-gray-600 leading-relaxed mb-6 italic">
+          "Fitur escrow memberikan rasa aman bagi kedua belah pihak. Safe Zone juga memastikan mahasiswa fokus saat ujian."
+        </p>
+        <div class="flex items-center gap-3">
+          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face&auto=format" alt="Sari" class="w-10 h-10 rounded-full object-cover">
+          <div>
+            <p class="font-heading font-semibold text-sm text-idb-blue-dark">Sari Dewi</p>
+            <p class="text-xs text-gray-400">Boutique Ubud</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     CTA SECTION
+     ═══════════════════════════════════════════════ -->
+<section id="cta-section" class="cta-section py-14 sm:py-20 lg:py-24">
+  <div class="relative z-10 max-w-3xl mx-auto px-4 text-center">
+    <div class="mb-6">
+      <i data-lucide="rocket" class="w-12 h-12 text-idb-orange mx-auto opacity-80"></i>
+    </div>
+    <h2 id="cta-title" class="font-heading text-3xl lg:text-4xl font-bold text-white mb-4">Siap Untuk Mulai?</h2>
+    <p id="cta-sub" class="text-blue-200/80 mb-10 text-base max-w-lg mx-auto leading-relaxed">
+      Bergabunglah dengan platform yang mendukung masa depan mahasiswa dan UMKM Bali. Gratis, aman, dan terpercaya.
+    </p>
+    <div id="cta-btns" class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="/register" class="btn btn-orange text-base" style="padding:15px 36px">
+        <i data-lucide="user-plus" class="w-5 h-5"></i>
+        Daftar Sekarang
+      </a>
+      <a href="/login" class="btn text-base" style="padding:15px 28px;background:rgba(255,255,255,0.1);color:white;border:1px solid rgba(255,255,255,0.2)">
+        Sudah Punya Akun? Masuk
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════════ -->
+<footer class="bg-idb-charcoal text-gray-400 pt-16 pb-8">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-10 mb-10 md:mb-12">
+      <!-- Brand -->
+      <div class="col-span-2 md:col-span-2">
+        <div class="flex items-center gap-2.5 mb-4">
+          <div class="bg-white rounded-lg px-2 py-1 shadow-sm"><img src="/images/logo.png" alt="StudentWorks" class="h-10 w-auto"></div>
+        </div>
+        <p class="text-sm text-gray-400 leading-relaxed max-w-sm mb-4">
+          Platform kerja freelance khusus mahasiswa IDB Bali. Menghubungkan keahlian akademik dengan peluang nyata dari UMKM dan startup lokal.
+        </p>
+        <p class="text-xs text-gray-500 font-medium">Kuliah. Kerja. Berkembang.</p>
+      </div>
+
+      <!-- Links -->
+      <div>
+        <h5 class="font-heading font-semibold text-white text-sm mb-4">Platform</h5>
+        <div class="space-y-2.5">
+          <a href="#fitur" class="block text-sm hover:text-white transition-colors">Fitur</a>
+          <a href="#talenta" class="block text-sm hover:text-white transition-colors">Talenta</a>
+          <a href="#cara-kerja" class="block text-sm hover:text-white transition-colors">Cara Kerja</a>
+          <a href="/login" class="block text-sm hover:text-white transition-colors">Masuk</a>
+        </div>
+      </div>
+
+      <!-- Legal -->
+      <div>
+        <h5 class="font-heading font-semibold text-white text-sm mb-4">Informasi</h5>
+        <div class="space-y-2.5">
+          <a href="#" class="block text-sm hover:text-white transition-colors">Syarat & Ketentuan</a>
+          <a href="#" class="block text-sm hover:text-white transition-colors">Kebijakan Privasi</a>
+          <a href="#" class="block text-sm hover:text-white transition-colors">FAQ</a>
+          <a href="#" class="block text-sm hover:text-white transition-colors">Hubungi Kami</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-gray-700/50 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+      <p class="text-xs text-gray-500">&copy; 2026 StudentWorks &mdash; Institut Desain & Bisnis Bali</p>
+      <div class="flex items-center gap-5">
+        <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+        <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="twitter" class="w-4 h-4"></i></a>
+        <a href="#" class="text-gray-500 hover:text-white transition-colors"><i data-lucide="linkedin" class="w-4 h-4"></i></a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══════════════════════════════════════════════
+     SCRIPTS: GSAP Animations + Navbar Scroll + Lucide
+     ═══════════════════════════════════════════════ -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // ── Initialize Lucide Icons ──
+  if (typeof lucide !== 'undefined') lucide.createIcons();
+
+  if (typeof gsap === 'undefined') return;
+  gsap.registerPlugin(ScrollTrigger);
+
+  // ── Navbar: solid on scroll ──
+  const nav = document.getElementById('landing-nav');
+  const navLinks = nav.querySelectorAll('.nav-link');
+  const brand = nav.querySelector('.nav-brand');
+
+  function updateNav() {
+    const scrolled = window.scrollY > 50;
+    nav.classList.toggle('scrolled', scrolled);
+    navLinks.forEach(l => {
+      l.style.color = '';
+    });
+  }
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
+
+  // ── Hero: staggered entrance ──
+  const heroTl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+  heroTl
+    .from('#hero-badge', { y: 20, opacity: 0, duration: 0.5 })
+    .from('#hero-title', { y: 50, opacity: 0, duration: 0.9 }, '-=0.3')
+    .from('#hero-sub', { y: 35, opacity: 0, duration: 0.7 }, '-=0.5')
+    .from('#hero-ctas', { y: 25, opacity: 0, duration: 0.6 }, '-=0.4')
+    .from('#hero-trust', { y: 15, opacity: 0, duration: 0.5 }, '-=0.3');
+
+  // ── Hero visual: image reveal ──
+  gsap.from('#hero-visual .hero-image-wrapper', {
+    scale: 0.92,
+    opacity: 0,
+    duration: 1,
+    ease: 'power2.out',
+    delay: 0.4
+  });
+
+  // ── Hero floating cards: stagger in ──
+  gsap.from('.hero-float-card', {
+    scale: 0.8,
+    opacity: 0,
+    duration: 0.6,
+    stagger: 0.2,
+    ease: 'back.out(1.7)',
+    delay: 0.9
+  });
+
+  // ── Stats: count-up on scroll ──
+  ScrollTrigger.create({
+    trigger: '#stats-bar',
+    start: 'top 80%',
+    once: true,
+    onEnter: () => {
+      document.querySelectorAll('.stat-item p[data-count]').forEach(el => {
+        const target = parseInt(el.dataset.count);
+        gsap.fromTo(el, { innerText: 0 }, {
+          innerText: target,
+          duration: 1.8,
+          ease: 'power2.out',
+          snap: { innerText: 1 },
+          onUpdate: function() {
+            el.innerText = Math.round(gsap.getProperty(el, 'innerText'));
+          }
+        });
+      });
+    }
+  });
+
+  // ── Stats bar: slide up ──
+  gsap.from('#stats-bar .stat-item', {
+    scrollTrigger: { trigger: '#stats-bar', start: 'top 85%', once: true },
+    y: 30, opacity: 0, duration: 0.5, stagger: 0.1, ease: 'power2.out'
+  });
+
+  // ── Value Proposition ──
+  gsap.from('#value-header', {
+    scrollTrigger: { trigger: '#value-header', start: 'top 80%', once: true },
+    y: 30, opacity: 0, duration: 0.6, ease: 'power2.out'
+  });
+  gsap.from('.feature-card', {
+    scrollTrigger: { trigger: '.feature-card', start: 'top 85%', once: true },
+    y: 60, opacity: 0, duration: 0.7, stagger: 0.15, ease: 'power2.out'
+  });
+
+  // ── Talent Cards ──
+  gsap.from('#talenta-header', {
+    scrollTrigger: { trigger: '#talenta-header', start: 'top 80%', once: true },
+    y: 30, opacity: 0, duration: 0.6, ease: 'power2.out'
+  });
+  gsap.from('.talent-card', {
+    scrollTrigger: { trigger: '.talent-card', start: 'top 85%', once: true },
+    y: 50, opacity: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out'
+  });
+
+  // ── Steps ──
+  gsap.from('#steps-header', {
+    scrollTrigger: { trigger: '#steps-header', start: 'top 80%', once: true },
+    y: 30, opacity: 0, duration: 0.6, ease: 'power2.out'
+  });
+  gsap.from('.step-card', {
+    scrollTrigger: { trigger: '.step-card', start: 'top 85%', once: true },
+    y: 50, opacity: 0, scale: 0.9, duration: 0.6, stagger: 0.12, ease: 'back.out(1.4)'
+  });
+
+  // ── Testimonials ──
+  gsap.from('#testimonial-header', {
+    scrollTrigger: { trigger: '#testimonial-header', start: 'top 80%', once: true },
+    y: 30, opacity: 0, duration: 0.6, ease: 'power2.out'
+  });
+  gsap.from('.testimonial-card', {
+    scrollTrigger: { trigger: '.testimonial-card', start: 'top 85%', once: true },
+    y: 50, opacity: 0, duration: 0.6, stagger: 0.15, ease: 'power2.out'
+  });
+
+  // ── CTA ──
+  gsap.from('#cta-title', {
+    scrollTrigger: { trigger: '#cta-section', start: 'top 80%', once: true },
+    y: 30, opacity: 0, duration: 0.7, ease: 'power2.out'
+  });
+  gsap.from('#cta-sub', {
+    scrollTrigger: { trigger: '#cta-section', start: 'top 80%', once: true },
+    y: 20, opacity: 0, duration: 0.6, delay: 0.15, ease: 'power2.out'
+  });
+  gsap.from('#cta-btns', {
+    scrollTrigger: { trigger: '#cta-section', start: 'top 80%', once: true },
+    y: 20, opacity: 0, duration: 0.6, delay: 0.3, ease: 'power2.out'
+  });
+
+  // ── Navbar entrance ──
+  gsap.from('#landing-nav', { y: -30, opacity: 0, duration: 0.6, ease: 'power2.out', delay: 0.1 });
+
+  // ── Smooth scroll for anchor links ──
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+  // ── Safety net: force visibility if ScrollTrigger didn't fire ──
+  // Refresh ScrollTrigger multiple times as layout settles from images/fonts loading
+  const refreshSchedule = [100, 300, 600, 1200, 2500];
+  refreshSchedule.forEach(ms => {
+    setTimeout(() => ScrollTrigger.refresh(), ms);
+  });
+  window.addEventListener('load', () => ScrollTrigger.refresh());
+
+  // Force-reveal all images when they load (prevents layout shift after GSAP init)
+  document.querySelectorAll('img').forEach(img => {
+    if (!img.complete) {
+      img.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+    }
+  });
+
+  // Hard fallback: if anything is still invisible after 2s, force-reveal it
+  setTimeout(() => {
+    document.querySelectorAll('.feature-card, .talent-card, .step-card, .testimonial-card, .stat-item, #value-header, #talenta-header, #steps-header, #testimonial-header, #cta-title, #cta-sub, #cta-btns, #stats-bar, #hero-visual .hero-image-wrapper, .hero-float-card, #hero-badge, #hero-title, #hero-sub, #hero-ctas, #hero-trust, #landing-nav').forEach(el => {
+      if (parseFloat(getComputedStyle(el).opacity) < 0.5) {
+        gsap.set(el, { opacity: 1, y: 0, scale: 1 });
+      }
+    });
+  }, 2000);
+});
+</script>
+
+<%- include('partials/footer') %>

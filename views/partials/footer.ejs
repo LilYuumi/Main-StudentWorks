@@ -1,0 +1,100 @@
+<!-- Initialize Lucide Icons -->
+<script>if (typeof lucide !== 'undefined') lucide.createIcons();</script>
+
+<!-- Mobile Sidebar -->
+<script>
+(function() {
+  var hamburger = document.querySelector('.hamburger-btn');
+  if (!hamburger) return;
+
+  var navContainer = hamburger.closest('.flex');
+  var allLinks = navContainer ? navContainer.querySelectorAll('a') : [];
+
+  // Build sidebar nav items from navbar links (skip brand logo)
+  var navItems = '';
+  var seen = {};
+  allLinks.forEach(function(a) {
+    var text = a.textContent.trim();
+    var href = a.getAttribute('href') || '#';
+    // Skip brand link (contains 'font-bold'), auth/login buttons, empty, duplicates
+    if (a.classList.contains('font-bold') || a.classList.contains('font-heading')) return;
+    if (a.classList.contains('btn-outline') || a.classList.contains('btn-primary')) return;
+    if (href === '/' || !text || seen[text]) return;
+    seen[text] = true;
+    navItems += '<a class="sidebar-nav-item" href="' + href + '">' + text + '</a>';
+  });
+
+  // Build sidebar footer (auth or profile/logout)
+  var footerHtml = '';
+  var logoutLink = navContainer ? navContainer.querySelector('a[href="/auth/logout"]') : null;
+  var loginLink = navContainer ? navContainer.querySelector('.btn-outline') : null;
+  var registerLink = navContainer ? navContainer.querySelector('.btn-primary') : null;
+
+  if (logoutLink) {
+    // Logged-in user
+    var profileLink = navContainer.querySelector('a[href*="/dashboard"]');
+    if (profileLink && profileLink !== logoutLink) {
+      footerHtml += '<a class="btn btn-outline" href="' + profileLink.getAttribute('href') + '">' + profileLink.textContent.trim() + '</a>';
+    }
+    footerHtml += '<a class="btn btn-outline" href="/auth/logout" style="color:#e53e3e;border-color:#e53e3e;">Keluar</a>';
+  } else if (loginLink || registerLink) {
+    // Guest
+    if (loginLink) footerHtml += '<a class="btn btn-outline" href="' + loginLink.getAttribute('href') + '">Masuk</a>';
+    if (registerLink) footerHtml += '<a class="btn btn-primary" href="' + registerLink.getAttribute('href') + '">Daftar</a>';
+  }
+
+  // Create sidebar and overlay
+  var sidebar = document.createElement('div');
+  sidebar.className = 'sidebar';
+  sidebar.id = 'mobile-sidebar';
+  sidebar.innerHTML =
+    '<div class="sidebar-header">' +
+      '<div class="sidebar-brand">' +
+        '<img src="/images/logo.png" alt="StudentWorks" class="sidebar-logo-img">' +
+      '</div>' +
+      '<button class="sidebar-close" id="sidebar-close-btn">' +
+        '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>' +
+      '</button>' +
+    '</div>' +
+    '<nav class="sidebar-nav">' + navItems + '</nav>' +
+    (footerHtml ? '<div class="sidebar-footer">' + footerHtml + '</div>' : '');
+
+  var overlay = document.createElement('div');
+  overlay.className = 'sidebar-overlay';
+  overlay.id = 'sidebar-overlay';
+
+  document.body.appendChild(sidebar);
+  document.body.appendChild(overlay);
+
+  function openSidebar() {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+    hamburger.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeSidebar() {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+    hamburger.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  hamburger.addEventListener('click', function() {
+    sidebar.classList.contains('active') ? closeSidebar() : openSidebar();
+  });
+  overlay.addEventListener('click', closeSidebar);
+  document.getElementById('sidebar-close-btn').addEventListener('click', closeSidebar);
+
+  // Close on link click
+  sidebar.querySelectorAll('.sidebar-nav-item').forEach(function(link) {
+    link.addEventListener('click', closeSidebar);
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && sidebar.classList.contains('active')) closeSidebar();
+  });
+})();
+</script>
+</body>
+</html>

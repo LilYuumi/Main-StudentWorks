@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+
+<nav class="bg-idb-blue border-b border-idb-blue-dark sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap justify-between items-center gap-2 py-2 min-h-[3.5rem]">
+      <button class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="/klien/dashboard" class="flex items-center gap-2">
+        <div class="bg-white rounded-lg px-2 py-1 shadow-sm"><img src="/images/logo.png" alt="StudentWorks" class="h-9 w-auto"></div>
+                <span class="status-chip ml-1" style="font-size:0.6rem;padding:2px 8px;background:#FF6B35;color:white">Klien</span>
+      </a>
+      <div class="hidden md:flex md:flex-wrap md:items-center md:gap-4">
+        <a href="/klien/dashboard" class="text-sm text-white hover:underline font-medium">Dashboard</a>
+        <a href="/logout" class="text-sm text-white/80 hover:text-white font-medium">Keluar</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 page-fade-in">
+  <div class="mb-6">
+    <h2 class="font-heading text-2xl font-bold text-idb-blue-dark">Eksplorasi Talenta Mahasiswa</h2>
+    <p class="text-sm text-gray-500 mt-1">Temukan mahasiswa berbakat yang terverifikasi.</p>
+  </div>
+
+  <!-- Filter -->
+  <div class="card-flat p-4 mb-6">
+    <form method="GET" class="flex flex-col sm:flex-row gap-3 sm:items-end">
+      <div class="flex-1">
+        <label class="text-xs font-medium text-gray-600">Filter Jurusan</label>
+        <select name="jurusan" class="input mt-1">
+          <option value="">Semua Jurusan</option>
+          <% jurusanList.forEach(j => { %>
+            <option value="<%= j %>" <%= jurusan === j ? 'selected' : '' %>><%= j %></option>
+          <% }) %>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-blue" style="padding:10px 24px">Filter</button>
+    </form>
+  </div>
+
+  <!-- Student Cards Grid -->
+  <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+    <% students.forEach(student => { %>
+      <div class="card p-6">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 bg-gradient-to-br from-idb-blue to-idb-blue-light rounded-full flex items-center justify-center text-white font-heading font-bold shadow-sm">
+            <%= student.name.charAt(0) %>
+          </div>
+          <div>
+            <h4 class="font-heading font-semibold text-idb-blue-dark"><%= student.name %></h4>
+            <p class="text-xs text-gray-500"><%= student.jurusan || 'Belum diisi' %></p>
+          </div>
+        </div>
+
+        <% if (student.bio) { %>
+          <p class="text-sm text-gray-600 mb-3 leading-relaxed"><%= student.bio %></p>
+        <% } %>
+
+        <div class="flex flex-wrap gap-1.5 mb-3">
+          <% student.skillsArray.slice(0, 5).forEach(skill => { %>
+            <span class="text-xs px-2.5 py-1 rounded-btn font-medium
+              <%= student.verifiedSkills.includes(skill) ? 'badge-verified' : 'bg-idb-gray text-idb-charcoal border border-gray-200' %>">
+              <%= skill %>
+            </span>
+          <% }) %>
+        </div>
+
+        <% if (student.verifiedSkills.length > 0) { %>
+          <div class="mb-3 pt-3 border-t border-gray-100">
+            <span class="badge-verified">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.819 2.819 3.066 3.066 0 00.723 1.745 3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.819 2.819 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.819-2.819 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.819-2.819zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              Terverifikasi Kompeten (<%= student.verifiedSkills.length %> Nilai A)
+            </span>
+          </div>
+        <% } %>
+
+        <% if (student.is_safe_zone) { %>
+          <button disabled class="btn btn-disabled w-full mt-2 flex items-center justify-center gap-2" title="Mahasiswa sedang dalam Safe Zone minggu ujian">
+            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+            Safe Zone Aktif (Minggu Ujian - Fokus Belajar)
+          </button>
+        <% } else { %>
+          <a href="/klien/proyek/baru" class="btn btn-blue w-full mt-2 text-center flex items-center justify-center gap-2" style="font-size:0.8rem">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            Rekrut Mahasiswa Ini
+          </a>
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+
+  <% if (students.length === 0) { %>
+    <div class="empty-state">
+      <div class="empty-state-icon" style="background:#EDF2F7">
+        <i data-lucide="users" class="w-7 h-7"></i>
+      </div>
+      <p class="text-gray-500 text-sm">Belum ada talenta mahasiswa yang tersedia.</p>
+    </div>
+  <% } %>
+</div>
+
+<script>
+// Initialize Lucide icons
+if (typeof lucide !== 'undefined') {
+  lucide.createIcons();
+}
+</script>
+
+<%- include('../partials/footer') %>

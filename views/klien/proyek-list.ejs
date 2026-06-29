@@ -1,0 +1,53 @@
+<%- include('../partials/header') %>
+
+<nav class="bg-idb-blue border-b border-idb-blue-dark sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap justify-between items-center gap-2 py-2 min-h-[3.5rem]">
+      <button class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="/" class="flex items-center gap-2">
+        <div class="bg-white rounded-lg px-2 py-1 shadow-sm"><img src="/images/logo.png" alt="StudentWorks" class="h-9 w-auto"></div>
+              </a>
+      <div class="hidden md:flex md:flex-wrap md:items-center md:gap-4">
+        <% if (user) { %>
+          <a href="/logout" class="text-sm text-white/80 hover:text-white font-medium">Keluar</a>
+        <% } else { %>
+          <a href="/login" class="text-sm text-white hover:underline font-medium">Masuk</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 page-fade-in">
+  <h2 class="font-heading text-2xl font-bold text-idb-blue-dark mb-5">Proyek Terbuka</h2>
+
+  <% if (projects.length === 0) { %>
+    <div class="empty-state">
+      <div class="empty-state-icon" style="background:#EDF2F7">
+        <i data-lucide="folder-open" class="w-7 h-7"></i>
+      </div>
+      <p class="text-gray-500 text-sm">Belum ada proyek terbuka saat ini.</p>
+    </div>
+  <% } else { %>
+    <div class="grid md:grid-cols-2 gap-5">
+      <% projects.forEach(project => { %>
+        <div class="card project-card p-6" style="--project-color:#0F4C81">
+          <div class="flex justify-between items-start mb-3">
+            <h4 class="font-heading font-semibold text-idb-blue-dark"><%= project.judul_proyek %></h4>
+            <span class="status-chip status-chip--gray">Mencari Talenta</span>
+          </div>
+          <p class="text-sm text-gray-500 mb-2">Klien: <%= project.klien_name %></p>
+          <% if (project.deskripsi) { %>
+            <p class="text-sm text-gray-600 mb-4 leading-relaxed"><%= project.deskripsi.substring(0, 120) %><%= project.deskripsi.length > 120 ? '...' : '' %></p>
+          <% } %>
+          <div class="flex gap-4 text-sm text-gray-500">
+            <span>Anggaran: <strong class="text-idb-charcoal">Rp <%= project.anggaran.toLocaleString('id-ID') %></strong></span>
+            <span>Tenggat: <strong class="text-idb-charcoal"><%= project.tenggat_waktu %></strong></span>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,49 @@
+<%- include('partials/header') %>
+
+<div class="min-h-screen flex items-center justify-center py-12 px-4 auth-bg page-fade-in">
+  <div class="max-w-md w-full">
+    <div class="text-center mb-8">
+      <a href="/" class="inline-flex items-center gap-2 mb-6">
+        <img src="/images/logo.png" alt="StudentWorks" class="h-12 w-auto">
+      </a>
+      <h2 class="font-heading text-2xl font-bold text-idb-blue-dark">Masuk ke StudentWorks</h2>
+      <p class="text-sm text-gray-500 mt-1">Kuliah. Kerja. Berkembang.</p>
+    </div>
+    <div class="card p-8">
+      <form method="POST" action="/login" class="space-y-4">
+        <div>
+          <label class="text-sm font-medium text-gray-700 block mb-1">Email</label>
+          <input type="email" name="email" required class="input" placeholder="nama@email.com">
+        </div>
+        <div>
+          <label class="text-sm font-medium text-gray-700 block mb-1">Password</label>
+          <input type="password" name="password" required class="input" placeholder="Masukkan password">
+        </div>
+        <button type="submit" class="btn btn-blue w-full">Masuk</button>
+      </form>
+      <div class="mt-5 text-center">
+        <p class="text-sm text-gray-500">Belum punya akun? <a href="/register" class="text-idb-orange font-medium hover:underline">Daftar di sini</a></p>
+      </div>
+      <div class="mt-5 pt-5 border-t border-gray-100">
+        <p class="text-xs text-gray-400 text-center mb-3 font-medium">Akun demo:</p>
+        <div class="space-y-1.5 text-xs text-gray-500">
+          <div class="flex justify-between bg-idb-gray p-2 rounded-btn">
+            <span>Admin</span><span class="font-mono">admin@studentworks.id</span>
+          </div>
+          <div class="flex justify-between bg-idb-gray p-2 rounded-btn">
+            <span>Mahasiswa</span><span class="font-mono">ayu@student.idb.ac.id</span>
+          </div>
+          <div class="flex justify-between bg-idb-gray p-2 rounded-btn">
+            <span>Klien</span><span class="font-mono">budi@kopibali.com</span>
+          </div>
+          <p class="text-center text-gray-400 mt-2">Password: <span class="font-mono">[role]123</span></p>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-4">
+      <a href="/" class="text-sm text-gray-500 hover:text-idb-blue font-medium">&larr; Kembali ke Beranda</a>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/footer') %>

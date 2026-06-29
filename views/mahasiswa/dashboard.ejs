@@ -1,0 +1,470 @@
+<%- include('../partials/header') %>
+
+<!-- Navbar -->
+<nav class="bg-idb-blue border-b border-idb-blue-dark sticky top-0 z-40">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap justify-between items-center gap-2 py-2 min-h-[3.5rem]">
+      <button class="hamburger-btn" aria-label="Menu"><span></span><span></span><span></span></button>
+      <a href="/mahasiswa/dashboard" class="flex items-center gap-2">
+        <div class="bg-white rounded-lg px-2 py-1 shadow-sm"><img src="/images/logo.png" alt="StudentWorks" class="h-9 w-auto"></div>
+        <span class="status-chip status-chip--blue ml-1" style="font-size:0.6rem;padding:2px 8px">Mahasiswa</span>
+      </a>
+      <div class="hidden md:flex md:flex-wrap md:items-center md:gap-4">
+        <a href="/mahasiswa/proyek" class="text-sm text-white hover:text-white/80 font-medium">Cari Proyek</a>
+        <span class="text-sm text-white/70 hidden md:block"><%= user.name %></span>
+        <a href="/logout" class="text-sm text-white/80 hover:text-white font-medium">Keluar</a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 page-fade-in">
+
+  <% if (isExamPeriod) { %>
+    <div class="safe-zone-banner mb-6 flex items-center gap-3">
+      <i data-lucide="alert-triangle" class="w-6 h-6 text-amber-600"></i>
+      <div>
+        <strong class="font-heading"><%= examWarningMessage %></strong>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- Stats Row - Professional Design -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+    <!-- Total Penghasilan -->
+    <div class="card p-4 hover:shadow-lg transition-all duration-300 border-l-4 border-idb-green">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="wallet" class="w-5 h-5 text-idb-green"></i>
+        </div>
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Income</span>
+      </div>
+      <p class="font-heading text-2xl font-bold text-idb-green mb-1">Rp <%= totalEarnings.toLocaleString('id-ID') %></p>
+      <p class="text-xs text-gray-600 font-medium">Total Penghasilan</p>
+    </div>
+
+    <!-- Proyek Aktif -->
+    <div class="card p-4 hover:shadow-lg transition-all duration-300 border-l-4 border-idb-blue">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="activity" class="w-5 h-5 text-idb-blue"></i>
+        </div>
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Active</span>
+      </div>
+      <p class="font-heading text-2xl font-bold text-idb-blue mb-1"><%= activeProjects %></p>
+      <p class="text-xs text-gray-600 font-medium">Proyek Aktif</p>
+    </div>
+
+    <!-- Dalam Peninjauan -->
+    <div class="card p-4 hover:shadow-lg transition-all duration-300 border-l-4 border-idb-orange">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+          <i data-lucide="clock" class="w-5 h-5 text-idb-orange"></i>
+        </div>
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Review</span>
+      </div>
+      <p class="font-heading text-2xl font-bold text-idb-orange mb-1"><%= reviewProjects %></p>
+      <p class="text-xs text-gray-600 font-medium">Dalam Peninjauan</p>
+    </div>
+
+    <!-- Skill Terverifikasi -->
+    <div class="card p-4 hover:shadow-lg transition-all duration-300 border-l-4 border-idb-blue-dark">
+      <div class="flex items-center justify-between mb-2">
+        <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+          <i data-lucide="award" class="w-5 h-5 text-idb-blue-dark"></i>
+        </div>
+        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Verified</span>
+      </div>
+      <p class="font-heading text-2xl font-bold text-idb-blue-dark mb-1"><%= verifiedSkills.length %></p>
+      <p class="text-xs text-gray-600 font-medium">Skill Terverifikasi</p>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-3 gap-6">
+
+    <!-- Left Column: Profile + Calendar -->
+    <div class="lg:col-span-1 space-y-6">
+      <!-- Profile Card -->
+      <div class="card p-6">
+        <div class="flex items-center gap-4 mb-5">
+          <div class="w-14 h-14 bg-gradient-to-br from-idb-blue to-idb-blue-light rounded-full flex items-center justify-center text-white font-heading font-bold text-xl shadow-sm">
+            <%= profile ? profile.name.charAt(0) : '?' %>
+          </div>
+          <div>
+            <h3 class="font-heading font-bold text-idb-blue-dark"><%= profile ? profile.name : 'Belum lengkap' %></h3>
+            <p class="text-sm text-gray-500"><%= profile ? profile.jurusan || 'Belum isi jurusan' : 'Belum lengkap' %></p>
+            <% if (profile && profile.nim) { %>
+              <p class="text-xs text-gray-400 font-mono mt-0.5">NIM: <%= profile.nim %></p>
+            <% } %>
+          </div>
+        </div>
+
+        <% if (profile && profile.bio) { %>
+          <p class="text-sm text-gray-600 mb-4 leading-relaxed"><%= profile.bio %></p>
+        <% } %>
+
+        <!-- Skills -->
+        <div class="mb-4">
+          <h4 class="font-heading font-semibold text-xs text-gray-500 uppercase tracking-wider mb-2">Keahlian</h4>
+          <div class="flex flex-wrap gap-1.5">
+            <% skills.forEach(skill => { %>
+              <span class="text-xs px-2.5 py-1 rounded-btn font-medium
+                <%= verifiedSkills.includes(skill) ? 'badge-verified' : 'bg-idb-gray text-idb-charcoal border border-gray-200' %>">
+                <%= skill %>
+              </span>
+            <% }) %>
+          </div>
+        </div>
+
+        <% if (verifiedSkills.length > 0) { %>
+          <div class="mt-3 pt-3 border-t border-gray-100">
+            <span class="badge-verified">
+              <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.819 2.819 3.066 3.066 0 00.723 1.745 3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.819 2.819 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.819-2.819 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.819-2.819zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
+              Terverifikasi Kompeten (Nilai A)
+            </span>
+          </div>
+        <% } %>
+
+        <!-- Trust Score Component -->
+        <div class="mt-4 pt-4 border-t border-gray-100 flex flex-col items-center">
+          <div class="relative w-24 h-24">
+            <!-- Circular background -->
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-gray-200" stroke-width="3" stroke="currentColor" fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <!-- Dynamic progress path based on trustScore -->
+              <path class="<%= trustScore >= 80 ? 'text-green-500' : (trustScore >= 50 ? 'text-amber-500' : 'text-red-500') %>" 
+                stroke-dasharray="<%= trustScore %>, 100" stroke-width="3" stroke="currentColor" fill="none"
+                d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <div class="absolute inset-0 flex items-center justify-center flex-col">
+              <span class="text-xl font-bold font-heading text-idb-charcoal"><%= trustScore %>%</span>
+            </div>
+          </div>
+          <p class="text-xs font-semibold mt-2 text-idb-blue">Trust Score (Tingkat Komitmen)</p>
+        </div>
+
+        <!-- History Komitmen -->
+        <% if (commitmentMetrics && commitmentMetrics.length > 0) { %>
+        <div class="mt-4 pt-3 border-t border-gray-100">
+          <h4 class="text-sm font-bold text-idb-charcoal mb-2">Riwayat Komitmen</h4>
+          <div class="space-y-2 max-h-40 overflow-y-auto pr-1 custom-scrollbar">
+            <% commitmentMetrics.forEach(metric => { %>
+              <div class="bg-idb-gray p-2 rounded-btn flex items-start gap-2">
+                <% if (metric.metric_category === 'positive') { %>
+                  <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="flame" class="w-4 h-4 text-green-600"></i>
+                  </div>
+                <% } else { %>
+                  <div class="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-600"></i>
+                  </div>
+                <% } %>
+                <div class="flex-1">
+                  <p class="text-xs font-semibold text-idb-charcoal"><%= metric.metric_name %></p>
+                  <p class="text-[10px] text-gray-500"><%= new Date(metric.logged_at).toLocaleDateString('id-ID') %></p>
+                </div>
+                <div class="ml-auto flex items-center">
+                  <span class="text-xs font-bold <%= metric.metric_category === 'positive' ? 'text-green-600' : 'text-red-600' %>">
+                    <%= metric.metric_category === 'positive' ? '+' : '' %><%= metric.score_impact %>%
+                  </span>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        </div>
+        <% } %>
+
+        <button onclick="document.getElementById('edit-profile').classList.toggle('hidden')" class="text-sm text-idb-blue hover:underline mt-4 font-medium">Edit Profil</button>
+
+        <div id="edit-profile" class="hidden mt-4 pt-4 border-t border-gray-100">
+          <form method="POST" action="/mahasiswa/profil/update" class="space-y-3">
+            <div>
+              <label class="text-xs font-medium text-gray-600">NIM</label>
+              <input type="text" name="nim" value="<%= profile ? profile.nim || '' : '' %>" class="input mt-1" placeholder="Nomor Induk Mahasiswa">
+            </div>
+            <div>
+              <label class="text-xs font-medium text-gray-600">Jurusan</label>
+              <select name="jurusan" class="input mt-1">
+                <option value="">Pilih Jurusan</option>
+                <option value="Bisnis Digital" <%= profile && profile.jurusan === 'Bisnis Digital' ? 'selected' : '' %>>Bisnis Digital</option>
+                <option value="Desain Grafis" <%= profile && profile.jurusan === 'Desain Grafis' ? 'selected' : '' %>>Desain Grafis</option>
+                <option value="Teknologi Informasi" <%= profile && profile.jurusan === 'Teknologi Informasi' ? 'selected' : '' %>>Teknologi Informasi</option>
+              </select>
+            </div>
+            <div>
+              <label class="text-xs font-medium text-gray-600">Keahlian (pisahkan dengan koma)</label>
+              <input type="text" name="skills" value="<%= skills.join(', ') %>" class="input mt-1" placeholder="HTML, CSS, JavaScript">
+            </div>
+            <div>
+              <label class="text-xs font-medium text-gray-600">Bio</label>
+              <textarea name="bio" rows="3" class="input mt-1"><%= profile ? profile.bio || '' : '' %></textarea>
+            </div>
+            <button type="submit" class="btn btn-blue w-full">Simpan Profil</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Work & Academic Calendar -->
+      <div class="card p-6">
+        <h3 class="font-heading font-bold text-idb-blue-dark mb-4">Kalender Kerja & Kuliah</h3>
+
+        <%
+          const now = new Date();
+          const year = now.getFullYear();
+          const month = now.getMonth();
+          const today = now.getDate();
+          const firstDay = new Date(year, month, 1).getDay();
+          const daysInMonth = new Date(year, month + 1, 0).getDate();
+          const monthNames = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
+
+          // Parse exam periods
+          const examDates = [];
+          calendar.forEach(c => {
+            if (c.is_active) {
+              const start = new Date(c.tanggal_mulai);
+              const end = new Date(c.tanggal_selesai);
+              for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                if (d.getFullYear() === year && d.getMonth() === month) {
+                  examDates.push(d.getDate());
+                }
+              }
+            }
+          });
+
+          // Parse project deadlines
+          const projectDates = [];
+          projects.forEach(p => {
+            if (p.tenggat_waktu) {
+              const d = new Date(p.tenggat_waktu);
+              if (d.getFullYear() === year && d.getMonth() === month) {
+                projectDates.push(d.getDate());
+              }
+            }
+          });
+        %>
+
+        <div class="mb-3 flex justify-between items-center">
+          <h4 class="font-heading font-semibold text-sm"><%= monthNames[month] %> <%= year %></h4>
+        </div>
+        <div class="grid grid-cols-7 gap-1 text-center">
+          <div class="text-xs text-gray-400 font-medium py-1">Min</div>
+          <div class="text-xs text-gray-400 font-medium py-1">Sen</div>
+          <div class="text-xs text-gray-400 font-medium py-1">Sel</div>
+          <div class="text-xs text-gray-400 font-medium py-1">Rab</div>
+          <div class="text-xs text-gray-400 font-medium py-1">Kam</div>
+          <div class="text-xs text-gray-400 font-medium py-1">Jum</div>
+          <div class="text-xs text-gray-400 font-medium py-1">Sab</div>
+          <% for (let i = 0; i < firstDay; i++) { %>
+            <div></div>
+          <% } %>
+          <% for (let d = 1; d <= daysInMonth; d++) { %>
+            <%
+              let classes = 'cal-day';
+              if (d === today) classes += ' cal-day--today';
+              else if (examDates.includes(d)) classes += ' cal-day--exam';
+              else if (projectDates.includes(d)) classes += ' cal-day--project';
+            %>
+            <div class="<%= classes %>"><%= d %></div>
+          <% } %>
+        </div>
+        <div class="mt-4 flex gap-4 text-xs">
+          <div class="flex items-center gap-1.5">
+            <div class="w-3 h-3 rounded border-2 border-idb-orange bg-orange-50"></div>
+            <span class="text-gray-500">Ujian</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <div class="w-3 h-3 rounded bg-blue-50 flex items-center justify-center">
+              <div class="w-1.5 h-1.5 rounded-full bg-idb-blue"></div>
+            </div>
+            <span class="text-gray-500">Deadline Proyek</span>
+          </div>
+        </div>
+
+        <!-- Upcoming periods -->
+        <% if (calendar.length > 0) { %>
+          <div class="mt-5 pt-4 border-t border-gray-100 space-y-2">
+            <% calendar.forEach(period => { %>
+              <div class="flex justify-between items-center text-sm">
+                <div>
+                  <p class="font-medium text-idb-charcoal"><%= period.nama_periode %></p>
+                  <p class="text-xs text-gray-400"><%= period.tanggal_mulai %> — <%= period.tanggal_selesai %></p>
+                </div>
+                <span class="status-chip <%= period.is_active ? 'status-chip--amber' : 'status-chip--gray' %>" style="font-size:0.6rem">
+                  <%= period.is_active ? 'Aktif' : 'Nonaktif' %>
+                </span>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Right Column: Projects -->
+    <div class="lg:col-span-2">
+      <div class="flex justify-between items-center mb-5">
+        <h3 class="font-heading text-xl font-bold text-idb-blue-dark">Daftar Proyek</h3>
+        <a href="/mahasiswa/proyek" class="btn btn-orange" style="padding:8px 16px; font-size:0.8rem">Cari Proyek Baru</a>
+      </div>
+
+      <% if (projects.length === 0) { %>
+        <div class="empty-state">
+          <div class="empty-state-icon" style="background:#EDF2F7">
+            <i data-lucide="briefcase" class="w-7 h-7"></i>
+          </div>
+          <p class="text-gray-500 text-sm">Belum ada proyek. Mulai cari proyek yang sesuai keahlianmu!</p>
+          <a href="/mahasiswa/proyek" class="btn btn-orange mt-3" style="font-size:0.8rem;padding:8px 20px">Cari Proyek</a>
+        </div>
+      <% } else { %>
+        <div class="space-y-4">
+          <% projects.forEach(project => { %>
+            <div class="card project-card p-5" style="<%=
+              project.status === 'Sedang Dikerjakan' ? '--project-color:#0F4C81' :
+              project.status === 'Dalam Peninjauan' ? '--project-color:#ECC94B' :
+              project.status === 'Selesai' ? '--project-color:#48BB78' :
+              project.status === 'Dibatalkan' ? '--project-color:#E53E3E' :
+              '--project-color:#A0AEC0'
+            %>">
+              <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-3">
+                <div class="flex-1">
+                  <h4 class="font-heading font-semibold text-idb-blue-dark"><%= project.judul_proyek %></h4>
+                  <p class="text-sm text-gray-500">Klien: <%= project.klien_name %></p>
+                </div>
+                <%
+                  let chipClass = 'status-chip--gray';
+                  if (project.status === 'Sedang Dikerjakan') chipClass = 'status-chip--blue';
+                  else if (project.status === 'Dalam Peninjauan') chipClass = 'status-chip--amber';
+                  else if (project.status === 'Selesai') chipClass = 'status-chip--green';
+                  else if (project.status === 'Dibatalkan') chipClass = 'status-chip--red';
+                %>
+                <span class="status-chip <%= chipClass %>"><%= project.status %></span>
+              </div>
+
+              <% if (project.deskripsi) { %>
+                <p class="text-sm text-gray-600 mb-3 leading-relaxed"><%= project.deskripsi.substring(0, 120) %><%= project.deskripsi.length > 120 ? '...' : '' %></p>
+              <% } %>
+
+              <div class="flex flex-wrap gap-4 text-sm text-gray-500">
+                <span>Tenggat: <strong class="text-idb-charcoal"><%= project.tenggat_waktu || '-' %></strong></span>
+                <span>Anggaran: <strong class="text-idb-charcoal">Rp <%= (project.anggaran || 0).toLocaleString('id-ID') %></strong></span>
+              </div>
+
+              <!-- Escrow Status -->
+              <% if (project.escrow_status) { %>
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                  <% if (project.escrow_status === 'Dana Dikunci') { %>
+                    <div class="escrow-banner escrow-banner--locked">
+                      <span>🟢</span>
+                      <span>Dana telah dikunci oleh sistem. Anda aman untuk mulai bekerja!</span>
+                    </div>
+                  <% } else if (project.escrow_status === 'Menunggu Pembayaran') { %>
+                    <div class="escrow-banner escrow-banner--pending">
+                      <span>🟡</span>
+                      <span>Menunggu konfirmasi pembayaran dari Admin.</span>
+                    </div>
+                  <% } else if (project.escrow_status === 'Dana Dicairkan') { %>
+                    <div class="escrow-banner escrow-banner--released">
+                      <span>✅</span>
+                      <span>Dana telah dicairkan. Proyek selesai!</span>
+                    </div>
+                  <% } else if (project.escrow_status === 'Dana Dikembalikan') { %>
+                    <div class="escrow-banner" style="background:linear-gradient(135deg,#FED7D7 0%,#FEB2B2 100%);padding:10px 14px;border-radius:8px;display:flex;align-items:center;gap:8px">
+                      <span>↩️</span>
+                      <span>Dana telah dikembalikan ke klien. Proyek dibatalkan.</span>
+                    </div>
+                  <% } %>
+                </div>
+              <% } %>
+
+              <!-- Submitted Files -->
+              <% if (project.submissions && project.submissions.length > 0) { %>
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                  <p class="text-xs font-medium text-gray-500 mb-2">File yang Diunggah:</p>
+                  <div class="space-y-1.5">
+                    <% project.submissions.forEach(sub => { %>
+                      <div class="flex items-center justify-between bg-idb-gray rounded-btn px-3 py-2">
+                        <div class="flex items-center gap-2 min-w-0 flex-1">
+                          <span class="text-sm">📎</span>
+                          <a href="<%= sub.file_path %>" target="_blank" class="text-xs text-idb-blue hover:underline truncate"><%= sub.file_name %></a>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <span class="text-xs text-gray-400"><%= new Date(sub.created_at).toLocaleDateString('id-ID') %></span>
+                          <form method="POST" action="/mahasiswa/proyek/submission/hapus/<%= sub.id %>" class="inline">
+                            <button type="submit" onclick="return confirm('Hapus file ini?')" class="text-xs text-red-400 hover:text-red-600">✕</button>
+                          </form>
+                        </div>
+                      </div>
+                    <% }) %>
+                  </div>
+                </div>
+              <% } %>
+
+              <!-- Upload & Actions Row -->
+              <div class="mt-4 space-y-3">
+                <!-- Upload Work Files -->
+                <% if (project.status === 'Sedang Dikerjakan' || project.status === 'Dalam Peninjauan') { %>
+                  <form method="POST" action="/mahasiswa/proyek/upload/<%= project.id %>" enctype="multipart/form-data" class="flex flex-col sm:flex-row gap-2">
+                    <input type="file" name="files" multiple required class="flex-1 input text-sm file:bg-idb-blue file:text-white file:rounded-btn file:px-3 file:py-1 file:border-0 file:text-xs file:cursor-pointer" style="padding:4px" accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.zip,.rar,.txt,.psd,.ai,.svg">
+                    <button type="submit" class="btn btn-blue" style="font-size:0.75rem;padding:8px 14px;white-space:nowrap">Unggah Hasil Kerja</button>
+                  </form>
+                <% } %>
+
+                <!-- Chat + Submit Row -->
+                <div class="flex gap-2">
+                  <!-- Chat Button -->
+                  <% if (project.status !== 'Mencari Talenta' && project.status !== 'Dibatalkan') { %>
+                    <a href="/chat/<%= project.id %>" class="btn btn-ghost flex-1 flex items-center justify-center gap-1.5" style="font-size:0.8rem;padding:10px">
+                      💬 Chat
+                      <% if (project.unread_messages > 0) { %>
+                        <span class="bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 leading-none"><%= project.unread_messages %></span>
+                      <% } %>
+                    </a>
+                  <% } %>
+
+                  <!-- Submit for Review -->
+                  <% if (project.status === 'Sedang Dikerjakan' && project.escrow_status === 'Dana Dikunci') { %>
+                    <form method="POST" action="/mahasiswa/proyek/submit/<%= project.id %>" class="flex-1">
+                      <button type="submit" onclick="return confirm('Yakin ingin menyerahkan proyek untuk peninjauan?')" class="btn btn-blue w-full">Serahkan untuk Peninjauan</button>
+                    </form>
+                  <% } %>
+                </div>
+
+                <!-- Cancel Button -->
+                <% if (project.status === 'Sedang Dikerjakan' || project.status === 'Mencari Talenta') { %>
+                  <div>
+                    <button onclick="document.getElementById('cancel-<%= project.id %>').classList.toggle('hidden')" class="text-xs text-red-400 hover:text-red-600 font-medium w-full text-center py-1">
+                      ✕ Batalkan Proyek
+                    </button>
+                    <div id="cancel-<%= project.id %>" class="hidden mt-2">
+                      <form method="POST" action="/mahasiswa/proyek/batalkan/<%= project.id %>" onsubmit="return confirm('Yakin ingin membatalkan proyek ini?')">
+                        <textarea name="cancellation_reason" rows="2" class="input text-xs mb-2" placeholder="Alasan pembatalan (opsional)..."></textarea>
+                        <button type="submit" class="btn w-full" style="background:#E53E3E;color:white;font-size:0.75rem;padding:8px">Ya, Batalkan Proyek</button>
+                      </form>
+                    </div>
+                  </div>
+                <% } %>
+
+                <!-- Cancellation Info -->
+                <% if (project.status === 'Dibatalkan' && project.cancellation_reason) { %>
+                  <div class="bg-red-50 border border-red-100 rounded-btn p-3">
+                    <p class="text-xs text-red-600 font-medium">Alasan pembatalan:</p>
+                    <p class="text-xs text-red-500 mt-0.5"><%= project.cancellation_reason %></p>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<script>
+// Initialize Lucide icons
+if (typeof lucide !== 'undefined') {
+  lucide.createIcons();
+}
+</script>
+
+<%- include('../partials/footer') %>
